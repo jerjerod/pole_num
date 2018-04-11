@@ -104,6 +104,14 @@ export default {
         this.map.on('mouseleave', 'structures', () => {
           popup.remove()
         })
+
+        this.map.on('zoomend', () => {
+          if (this.map.getZoom() >= 15) {
+            this.map.easeTo({pitch:60})
+          } else {
+            this.map.easeTo({pitch:0})
+          }
+        })
       })
 
       this.map.on('click', e => {
