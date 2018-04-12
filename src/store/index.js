@@ -8,10 +8,16 @@ export default new Vuex.Store({
   state: {
     features: [],
     filters: [
+      { name: 'Espace Public Numérique', active: true },
+      { name: 'Espace de coworking', active: true },
       { name: 'InfoLab', active: true },
       { name: 'FabLab', active: true },
       { name: 'MédiaLab', active: true },
-      { name: 'Espace de coworking', active: true }
+      { name: 'LivingLab', active: true },
+      { name: 'Hackerspace', active: true },
+      { name: 'Makerspace', active: true },
+      { name: 'Repair Café', active: true },
+      { name: 'Tiers-lieux', active: true }
     ],
     sidebar: {
       active: true
