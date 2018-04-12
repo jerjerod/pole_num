@@ -52,14 +52,16 @@ export default new Vuex.Store({
               .get(process.env.API_URL + '?page=' + i)
               .then(response => {
                 for (let value in response.data) {
-                  response.data[value].localisation[0].properties['title'] = response.data[value].title.rendered
-                  response.data[value].localisation[0].properties['content'] = response.data[value].content.rendered
-                  features.push(response.data[value].localisation[0])
+                  if (response.data[value].localisation[0].properties['types'] != null) {
+                    response.data[value].localisation[0].properties['title'] = response.data[value].title.rendered
+                    response.data[value].localisation[0].properties['content'] = response.data[value].content.rendered
+                    features.push(response.data[value].localisation[0])
+                  }
                 }
               })
           }
-          commit('loadFeatures', features)
         })
+      commit('loadFeatures', features)
     },
     switchFilters ({ commit }, filters) {
       commit('switchFilters', filters)

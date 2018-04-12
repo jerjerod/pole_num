@@ -65,23 +65,6 @@ export default {
             'circle-stroke-color': '#fff'
           }
         })
-        this.map.addLayer({
-          id: 'structures-hover',
-          type: 'circle',
-          source: 'places',
-          'paint': {
-            'circle-radius': {
-              'stops': [[0, 2], [8, 6], [16, 20]]
-            },
-            'circle-color': '#eee',
-            'circle-stroke-width': {
-              'stops': [[0, 1], [8, 2], [16, 4]]
-            },
-            'circle-stroke-color': '#fff'
-          },
-          'filter': ['==', 'title', '']
-        })
-
         var popup = new mapboxgl.Popup({
           closeButton: false,
           closeOnClick: false
@@ -107,9 +90,9 @@ export default {
 
         this.map.on('zoomend', () => {
           if (this.map.getZoom() >= 15) {
-            this.map.easeTo({pitch:60})
+            this.map.easeTo({pitch: 60})
           } else {
-            this.map.easeTo({pitch:0})
+            this.map.easeTo({pitch: 0})
           }
         })
       })
