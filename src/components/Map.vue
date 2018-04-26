@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import Modal from '@/components/Modal'
 import * as turf from '@turf/helpers'
 import * as mapboxgl from 'mapbox-gl'
@@ -15,8 +15,10 @@ import { ModalProgrammatic } from 'buefy'
 export default {
   name: 'Map',
   mounted () {
-    this.$store.dispatch('loadFeatures')
     this.createMap()
+    this.loadFeatures().then(() => {
+      this.loadData()
+    })
   },
   computed: {
     ...mapGetters([
@@ -26,11 +28,14 @@ export default {
   },
   watch: {
     activeFilters: function () {
-      this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))
+      this.loadData()
     }
   },
 
   methods: {
+    ...mapActions([
+      'loadFeatures'
+    ]),
     createMap () {
       mapboxgl.accessToken = process.env.MAPBOX_KEY
       // init the map
@@ -48,7 +53,7 @@ export default {
       this.map.on('load', () => {
         this.map.addSource('places', {
           type: 'geojson',
-          data: turf.featureCollection(this.activeFeatures)
+          data: turf.featureCollection([])
         })
         this.map.addLayer({
           id: 'structures',
@@ -56,11 +61,11 @@ export default {
           source: 'places',
           'paint': {
             'circle-radius': {
-              'stops': [[0, 2], [8, 6], [16, 20]]
+              'stops': [[0, 2], [8, 6], [16, 16]]
             },
-            'circle-color': '#38a1ad',
+            'circle-color': '#70d1d1',
             'circle-stroke-width': {
-              'stops': [[0, 1], [8, 2], [16, 4]]
+              'stops': [[0, 1], [8, 2], [16, 2]]
             },
             'circle-stroke-color': '#fff'
           }
@@ -114,7 +119,10 @@ export default {
           }
         })
       })
-    }
+    },
+    loadData () {
+      this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))
+    }     
   }
 }
 </script>

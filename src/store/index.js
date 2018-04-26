@@ -47,26 +47,28 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadFeatures ({ commit }) {
-      let features = []
-      axios
-        .get(process.env.API_URL)
-        .then(response => {
-          let pagesNumber = Number(response.headers['x-wp-totalpages'])
-          for (let i = 1; i <= pagesNumber; i++) {
-            axios
-              .get(process.env.API_URL + '?page=' + i)
-              .then(response => {
-                for (let value in response.data) {
-                  if (response.data[value].localisation[0].properties['types'] != null) {
-                    response.data[value].localisation[0].properties['title'] = response.data[value].title.rendered
-                    response.data[value].localisation[0].properties['content'] = response.data[value].content.rendered
-                    features.push(response.data[value].localisation[0])
-                  }
-                }
-              })
+    async getNbPages () {
+      let response =  await axios.get(process.env.API_URL)
+      let pagesNumber = Number(response.headers['x-wp-totalpages'])
+      return pagesNumber
+    },
+    async loadFeatures ({ commit, dispatch }) {
+      const features = []
+      const callPages = []
+      let pagesNumber = await dispatch('getNbPages')
+      for (let i = 1; i <= pagesNumber; i++) {
+        callPages.push(axios.get(process.env.API_URL + '?page=' + i))
+      }
+      let responses = await axios.all(callPages)
+      for (let a in responses) {
+        for (let b in responses[a].data) {
+          if (responses[a].data[b].localisation[0].properties['types'] != null) {
+            responses[a].data[b].localisation[0].properties['title'] = responses[a].data[b].title.rendered
+            responses[a].data[b].localisation[0].properties['content'] = responses[a].data[b].content.rendered
+            features.push(responses[a].data[b].localisation[0])
           }
-        })
+        }
+      }
       commit('loadFeatures', features)
     },
     switchFilters ({ commit }, filters) {

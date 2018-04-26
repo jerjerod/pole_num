@@ -10,6 +10,7 @@ import 'buefy/lib/buefy.css'
 Vue.use(Buefy)
 
 Vue.config.productionTip = false
+Vue.config.devtools = true
 
 /* eslint-disable no-new */
 new Vue({
