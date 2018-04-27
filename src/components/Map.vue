@@ -92,7 +92,6 @@ export default {
         this.map.on('mouseleave', 'structures', () => {
           popup.remove()
         })
-
         this.map.on('zoomend', () => {
           if (this.map.getZoom() >= 15) {
             this.map.easeTo({pitch: 60})
@@ -101,7 +100,6 @@ export default {
           }
         })
       })
-
       this.map.on('click', e => {
         const features = this.map.queryRenderedFeatures(e.point, {
           layers: ['structures']
@@ -122,7 +120,7 @@ export default {
     },
     loadData () {
       this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))
-    }     
+    }
   }
 }
 </script>

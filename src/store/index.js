@@ -48,7 +48,7 @@ export default new Vuex.Store({
   },
   actions: {
     async getNbPages () {
-      let response =  await axios.get(process.env.API_URL)
+      let response = await axios.get(process.env.API_URL)
       let pagesNumber = Number(response.headers['x-wp-totalpages'])
       return pagesNumber
     },
