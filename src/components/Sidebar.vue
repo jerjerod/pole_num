@@ -4,14 +4,16 @@
       <p class="menu-label">
         Filtres
       </p>
-      <p class="field">
-        <button class="button is-success is-outlined" type="button" @click="toggleButton">Tout {{button.text}}</button>
-      </p>
       <section>
         <div class="field" v-bind:key="index" v-for="(filter, index) in filters">
-          <b-switch type="is-success" v-model="filter.active"> {{filter.name}} </b-switch>
+          <b-switch size="is-small" v-model="filter.active"> {{filter.name}} </b-switch>
         </div>
       </section>
+      <div class="buttons is-centered">
+        <p class="field">
+          <button class="button is-primary is-outlined is-rounded" type="button" @click="toggleButton">Tout {{button.text}}</button>
+        </p>
+      </div>
     </aside>
   </div>
 </template>
@@ -56,5 +58,8 @@ export default {
   top:50px;
   bottom:40px;
   overflow-y:auto;
+}
+.buttons {
+  margin-top:10px;
 }
 </style>

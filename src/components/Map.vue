@@ -14,8 +14,14 @@ import { ModalProgrammatic } from 'buefy'
 
 export default {
   name: 'Map',
+  data () {
+    return {
+      isFullPage: true
+    }
+  },
   mounted () {
     this.createMap()
+    this.loading()
     this.loadFeatures().then(() => {
       this.loadData()
     })
@@ -42,8 +48,8 @@ export default {
       this.map = new mapboxgl.Map({
         container: 'map',
         style: 'https://openmaptiles.github.io/klokantech-3d-gl-style/style-cdn.json',
-        center: [5.7, 45.2],
-        zoom: 12
+        center: [5.9, 45.1],
+        zoom: 10
       })
       // Add controls
       this.map.addControl(new mapboxgl.NavigationControl(), 'top-left')
@@ -120,6 +126,12 @@ export default {
     },
     loadData () {
       this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))
+    },
+    loading () {
+      const loadingComponent = this.$loading.open({
+        container: this.isFullPage ? null : this.$refs.element.$el
+      })
+      setTimeout(() => loadingComponent.close(), 3 * 1000)
     }
   }
 }

@@ -62,7 +62,7 @@ export default new Vuex.Store({
       let responses = await axios.all(callPages)
       for (let a in responses) {
         for (let b in responses[a].data) {
-          if (responses[a].data[b].localisation[0].properties['types'] != null) {
+          if (responses[a].data[b].localisation != null) {
             responses[a].data[b].localisation[0].properties['title'] = responses[a].data[b].title.rendered
             responses[a].data[b].localisation[0].properties['content'] = responses[a].data[b].content.rendered
             features.push(responses[a].data[b].localisation[0])
