@@ -13,11 +13,9 @@ export default new Vuex.Store({
       { name: 'InfoLab', active: true },
       { name: 'FabLab', active: true },
       { name: 'MédiaLab', active: true },
-      { name: 'LivingLab', active: true },
       { name: 'Hackerspace', active: true },
-      { name: 'Makerspace', active: true },
-      { name: 'Repair Café', active: true },
-      { name: 'Tiers-lieux', active: true }
+      { name: 'Matériel, réparation', active: true },
+      { name: 'Autre médiation numérique', active: true }
     ],
     sidebar: {
       active: true
