@@ -6,23 +6,20 @@
   </div>
 </template>
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapGetters} from 'vuex'
 import Modal from '@/components/Modal'
 import * as turf from '@turf/helpers'
 import * as mapboxgl from 'mapbox-gl'
-import { ModalProgrammatic } from 'buefy'
 
 export default {
   name: 'Map',
   data () {
     return {
-      map: {},
-      isFullPage: true,
-      mapisLoaded: false
+      isFullPage: true
     }
   },
   mounted () {
-    this.createMap()
+    this.loadAll()
     this.loading()
   },
   computed: {
@@ -32,9 +29,6 @@ export default {
     ])
   },
   watch: {
-    mapisLoaded: function () {
-      this.loadFeatures()
-    },
     activeFeatures: function () {
       this.loadData()
     },
@@ -43,25 +37,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'loadFeatures'
-    ]),
-    createMap () {
+    async createMap () {
       mapboxgl.accessToken = process.env.MAPBOX_KEY
-      // init the map
-      this.map = new mapboxgl.Map({
-        container: 'map',
-        style: 'https://openmaptiles.github.io/klokantech-3d-gl-style/style-cdn.json',
-        center: [5.9, 45.1],
-        zoom: 10
-      })
-      this.map.addControl(new mapboxgl.NavigationControl(), 'top-left')
-      this.map.addControl(new mapboxgl.GeolocateControl(), 'top-left')
-      this.map.addControl(new mapboxgl.ScaleControl({unit: 'kilometer'}))
-      this.map.on('load', () => {
-        this.setMapEvents()
-        this.mapisLoaded = true
-      })
+      if (!mapboxgl.supported()) {
+        alert('Your browser does not support Mapbox GL')
+      } else {
+        this.map = new mapboxgl.Map({
+          container: 'map',
+          style: 'https://openmaptiles.github.io/klokantech-3d-gl-style/style-cdn.json',
+          center: [5.9, 45.1],
+          zoom: 10
+        })
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left')
+        this.map.addControl(new mapboxgl.GeolocateControl(), 'top-left')
+        this.map.addControl(new mapboxgl.ScaleControl({unit: 'kilometer'}))
+        this.map.on('load', () => {
+          this.setMapEvents()
+        })
+      }
     },
     setMapEvents () {
       this.map.addSource('places', {
@@ -83,7 +76,7 @@ export default {
           'circle-stroke-color': '#fff'
         }
       })
-      var popup = new mapboxgl.Popup({
+      const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false
       })
@@ -120,7 +113,7 @@ export default {
           return
         }
         const feature = features[0]
-        ModalProgrammatic.open({
+        this.$modal.open({
           active: true,
           parent: this,
           component: Modal,
@@ -130,14 +123,21 @@ export default {
         })
       })
     },
+    async loadFeatures () {
+      await this.$store.dispatch('loadFeatures')
+    },
     loadData () {
       this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))
+    },
+    async loadAll () {
+      await this.createMap()
+      await this.loadFeatures()
     },
     loading () {
       const loadingComponent = this.$loading.open({
         container: this.isFullPage ? null : this.$refs.element.$el
       })
-      setTimeout(() => loadingComponent.close(), 3 * 1000)
+      setTimeout(() => loadingComponent.close(), 2 * 1000)
     }
   }
 }
