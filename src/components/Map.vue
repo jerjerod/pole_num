@@ -16,15 +16,13 @@ export default {
   name: 'Map',
   data () {
     return {
-      isFullPage: true
+      isFullPage: true,
+      mapisLoaded: false
     }
   },
   mounted () {
     this.createMap()
     this.loading()
-    this.loadFeatures().then(() => {
-      this.loadData()
-    })
   },
   computed: {
     ...mapGetters([
@@ -33,6 +31,12 @@ export default {
     ])
   },
   watch: {
+    mapisLoaded: function () {
+      this.loadFeatures()
+    },
+    activeFeatures: function () {
+      this.loadData()
+    },
     activeFilters: function () {
       this.loadData()
     }
@@ -123,6 +127,7 @@ export default {
           }
         })
       })
+      this.mapisLoaded = true
     },
     loadData () {
       this.map.getSource('places').setData(turf.featureCollection(this.activeFeatures))

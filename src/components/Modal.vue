@@ -33,6 +33,6 @@ export default {
 <style scoped>
 .phone {font-size: 20px;}
 .modal-card-head {background-color: rgba(10, 10, 10, 0.86);}
-.modal-card-title {color:#fff; font-weight: bold;}
+.modal-card-title {color:#fff; font-weight: bold; flex-shrink: 1 !important;}
 ul li {margin:20px;}
 </style>
